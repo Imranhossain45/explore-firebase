@@ -26,7 +26,7 @@ const SignInWithGoogle = () => {
     signOut(auth)
       .then((result) => {
         setUser(null);
-        console.log('Log out done');
+        console.log(result);
       })
       .catch((error) => {
         console.log(error);
