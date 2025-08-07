@@ -1,12 +1,12 @@
 
 import './App.css'
-import SignInMethod from './components/SignInMethod/SignInMethod'
+import PasswordAuth from './components/PasswordAuth/PasswordAuth'
 
 function App() {
 
   return (
     <div>
-      <SignInMethod></SignInMethod>
+      <PasswordAuth></PasswordAuth>
     </div>
   )
 }
