@@ -1,14 +1,12 @@
 
 import './App.css'
-import SignInWIthFB from './components/SignInWithFB/SignInWIthFB'
-import SignInWithGoogle from './SignInWithGoogle/SignInWithGoogle'
+import SignInMethod from './components/SignInMethod/SignInMethod'
 
 function App() {
 
   return (
     <div>
-      {/* <SignInWithGoogle></SignInWithGoogle> */}
-    <SignInWIthFB></SignInWIthFB>
+      <SignInMethod></SignInMethod>
     </div>
   )
 }
