@@ -1,12 +1,13 @@
 
 import './App.css'
-import PasswordAuth from './components/PasswordAuth/PasswordAuth'
+import SignIn from './components/PasswordAuth/SignIn'
 
 function App() {
 
   return (
     <div>
-      <PasswordAuth></PasswordAuth>
+      <SignIn></SignIn>
+
     </div>
   )
 }
