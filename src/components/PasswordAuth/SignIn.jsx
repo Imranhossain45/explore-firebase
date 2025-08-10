@@ -8,7 +8,7 @@ const SignIn = () => {
       <form className='bg-slate-900 text-white w-1/2 mx-auto my-5 p-10 shadow-2xl rounded-lg'>
         <h2 className='text-center text-3xl underline mb-3'>Login</h2>
         <input className='block w-full p-2 border' type="email" name="" id="" placeholder='Email' />
-        <input className='block w-full p-2 border my-5' type="text" name="" id="" placeholder='Password' />
+        <input className='block w-full p-2 border my-5' type="password" name="" id="" placeholder='Password' />
         <div className='flex justify-between'>
           <div>
             <input type="checkbox" name="" id="forChecked" />

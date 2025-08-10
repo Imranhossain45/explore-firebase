@@ -9,6 +9,7 @@ import Products from './components/Products.jsx';
 import SignIn from './components/PasswordAuth/SignIn.jsx';
 import SignUp from './components/PasswordAuth/SignUp.jsx';
 import Contact from './components/Contact.jsx';
+import TermsaAndConditions from './components/TermsaAndConditions.jsx';
 const router = createBrowserRouter([
   {
     path:"/",
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path:"/contact",
         element: <Contact></Contact>
+      },
+      {
+        path:"/termsandconditions",
+        element: <TermsaAndConditions></TermsaAndConditions>
       },
     ]
   }
