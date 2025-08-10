@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Navbar = () => {
   return (
     <div className='bg-slate-900 py-4'>
-      <div className='container flex justify-between text-white'>
+      <div className='container flex justify-between text-white mx-auto'>
       <div>
         <h2>Practice</h2>
       </div>
