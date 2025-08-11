@@ -1,42 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import auth from "../../Firebase/firebaseinit";
 
 const SignUp = () => {
+  const [profile, setProfile] = useState("");
+  const formSubmit = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const confirm_password = e.target.confirm_password.value;
+    createUserWithEmailAndPassword(auth, email, confirm_password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        updateProfile(user, {
+          displayName: name,
+        })
+          .then(() => {
+            setProfile(user);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div>
-      <form className="bg-slate-900 text-white w-1/2 mx-auto my-5 p-10 shadow-2xl rounded-lg">
+      {
+        profile && 
+        <div>
+        <h2>Name: {profile.displayName}</h2>
+        <p>E-mail: {profile.email}</p>
+      </div>
+      }
+      <form
+        className="bg-slate-900 text-white w-1/2 mx-auto my-5 p-10 shadow-2xl rounded-lg"
+        onSubmit={formSubmit}
+      >
         <h2 className="text-center text-3xl underline mb-3">Register</h2>
         <input
           className="block w-full p-2 border rounded"
-          type="test"
-          name=""
+          type="text"
+          name="name"
           id=""
           placeholder="Name"
         />
         <input
           className="block w-full p-2 border rounded my-2"
           type="email"
-          name=""
+          name="email"
           id=""
           placeholder="Email"
         />
         <input
           className="block w-full p-2 border rounded my-2"
           type="password"
-          name=""
+          name="password"
           id=""
           placeholder="Password"
         />
         <input
           className="block w-full p-2 border rounded my-2"
           type="password"
-          name=""
+          name="confirm_password"
           id=""
           placeholder="Confirm Password"
         />
 
-        <div className='flex justify-between'>
+        <div className="flex justify-between">
           <div>
             <input type="checkbox" name="" id="forChecked" />
             <label htmlFor="forChecked" className="mx-2">
@@ -44,20 +80,20 @@ const SignUp = () => {
             </label>
           </div>
 
-         <div>
-           <input type="checkbox" name="" id="termsAndConditions" />
-          <label htmlFor="termsAndConditions">
-            {" "}
-            I agree to the{" "}
-            <Link to={"/termsandconditions"} className="text-cyan-400">
-              Terms and Conditions
-            </Link>
-          </label>
-         </div>
+          <div>
+            <input type="checkbox" name="" id="termsAndConditions" />
+            <label htmlFor="termsAndConditions">
+              {" "}
+              I agree to the{" "}
+              <Link to={"/termsandconditions"} className="text-cyan-400">
+                Terms and Conditions
+              </Link>
+            </label>
+          </div>
         </div>
         <input
           type="submit"
-          value="Login"
+          value="Register"
           className="block w-full bg-cyan-900 my-3 hover:bg-cyan-950 cursor-pointer p-2 rounded-lg"
         />
         <div className="flex justify-center items-center gap-3">
