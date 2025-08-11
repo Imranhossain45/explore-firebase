@@ -17,6 +17,7 @@ const SignUp = () => {
       alert("Password not matched");
       return;
     }
+    
     registeredUser(email, confirm_password)
       .then((result) => {
         const user = result.user;
