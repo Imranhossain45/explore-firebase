@@ -1,25 +1,34 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import auth from "../../Firebase/firebaseinit";
+
+import { ProfileDataOfUser } from "../../Contexts/ProfileContext";
+import { updateProfile } from "firebase/auth";
 
 const SignUp = () => {
-  const [profile, setProfile] = useState("");
+  const { registeredUser, saveUserProfile } = useContext(ProfileDataOfUser);
   const formSubmit = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
     const confirm_password = e.target.confirm_password.value;
-    createUserWithEmailAndPassword(auth, email, confirm_password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+    if (password !== confirm_password) {
+      alert("Password not matched");
+      return;
+    }
+    registeredUser(email, confirm_password)
+      .then((result) => {
+        const user = result.user;
         updateProfile(user, {
           displayName: name,
         })
           .then(() => {
-            setProfile(user);
+            saveUserProfile({
+              name: user.displayName,
+              email: user.email,
+              uid: user.uid,
+            });
           })
           .catch((err) => {
             console.log(err);
@@ -31,13 +40,6 @@ const SignUp = () => {
   };
   return (
     <div>
-      {
-        profile && 
-        <div>
-        <h2>Name: {profile.displayName}</h2>
-        <p>E-mail: {profile.email}</p>
-      </div>
-      }
       <form
         className="bg-slate-900 text-white w-1/2 mx-auto my-5 p-10 shadow-2xl rounded-lg"
         onSubmit={formSubmit}
