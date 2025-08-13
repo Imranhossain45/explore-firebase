@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
 
@@ -7,17 +7,23 @@ import { updateProfile } from "firebase/auth";
 
 const SignUp = () => {
   const { registeredUser, saveUserProfile } = useContext(ProfileDataOfUser);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const formRef = useRef(null);
   const formSubmit = (e) => {
     e.preventDefault();
+    const form = formRef.current;
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
     const confirm_password = e.target.confirm_password.value;
+    setSuccessMessage('');
+    setErrorMessage('')
     if (password !== confirm_password) {
       alert("Password not matched");
       return;
     }
-    
+
     registeredUser(email, confirm_password)
       .then((result) => {
         const user = result.user;
@@ -34,17 +40,21 @@ const SignUp = () => {
           .catch((err) => {
             console.log(err);
           });
+        setSuccessMessage("Registration Success...");
+        form.reset();
       })
       .catch((err) => {
-        console.log(err);
+        setErrorMessage(err.message)
       });
   };
   return (
     <div>
       <form
+        ref={formRef}
         className="bg-slate-900 text-white w-1/2 mx-auto my-5 p-10 shadow-2xl rounded-lg"
         onSubmit={formSubmit}
       >
+
         <h2 className="text-center text-3xl underline mb-3">Register</h2>
         <input
           className="block w-full p-2 border rounded"
@@ -99,6 +109,15 @@ const SignUp = () => {
           value="Register"
           className="block w-full bg-cyan-900 my-3 hover:bg-cyan-950 cursor-pointer p-2 rounded-lg"
         />
+        {
+          errorMessage && 
+          <p className="text-center text-red-400 bg-cyan-950 py-3 text-xl animate-bounce">{errorMessage}</p>
+        }
+        {successMessage && (
+          <p className="text-center text-green-400 bg-cyan-950 py-3 text-xl animate-bounce">
+            {successMessage}
+          </p>
+        )}
         <div className="flex justify-center items-center gap-3">
           <hr className="border-gray-400 w-1/4" />
           <span>or continue with</span>
