@@ -9,7 +9,11 @@ const SignUp = () => {
   const { registeredUser, saveUserProfile } = useContext(ProfileDataOfUser);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const formRef = useRef(null);
+  var regularExpression =
+    /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+
   const formSubmit = (e) => {
     e.preventDefault();
     const form = formRef.current;
@@ -17,10 +21,25 @@ const SignUp = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     const confirm_password = e.target.confirm_password.value;
-    setSuccessMessage('');
-    setErrorMessage('')
+    setSuccessMessage("");
+    setErrorMessage("");
     if (password !== confirm_password) {
-      alert("Password not matched");
+      setErrorMessage("Password not matched!");
+      return;
+    } else if (password.length < 6 || confirm_password.length < 6) {
+      setErrorMessage("Password should be at least 6 charecters!");
+      return;
+    }
+    if (!regularExpression.test(confirm_password)) {
+      setErrorMessage("Password should be at least 6 charecters long and include at least one uppercase letter,one lowercase letter, one number and one special character!");
+      return;
+    }
+    if(name == ''){
+      setErrorMessage("Name field is required!");
+      return;
+    }
+    if(email == ''){
+      setErrorMessage("Email field is required!");
       return;
     }
 
@@ -44,7 +63,7 @@ const SignUp = () => {
         form.reset();
       })
       .catch((err) => {
-        setErrorMessage(err.message)
+        setErrorMessage(err.message);
       });
   };
   return (
@@ -54,32 +73,31 @@ const SignUp = () => {
         className="bg-slate-900 text-white w-1/2 mx-auto my-5 p-10 shadow-2xl rounded-lg"
         onSubmit={formSubmit}
       >
-
         <h2 className="text-center text-3xl underline mb-3">Register</h2>
         <input
           className="block w-full p-2 border rounded"
           type="text"
           name="name"
           id=""
-          placeholder="Name"
+          placeholder="Name" required
         />
         <input
           className="block w-full p-2 border rounded my-2"
           type="email"
           name="email"
           id=""
-          placeholder="Email"
+          placeholder="Email" required
         />
         <input
           className="block w-full p-2 border rounded my-2"
-          type="password"
+          type={showPass ? "text" : "password"}
           name="password"
           id=""
           placeholder="Password"
         />
         <input
           className="block w-full p-2 border rounded my-2"
-          type="password"
+          type={showPass ? "text" : "password"}
           name="confirm_password"
           id=""
           placeholder="Confirm Password"
@@ -87,7 +105,12 @@ const SignUp = () => {
 
         <div className="flex justify-between">
           <div>
-            <input type="checkbox" name="" id="forChecked" />
+            <input
+              onClick={() => setShowPass(!showPass)}
+              type="checkbox"
+              name=""
+              id="forChecked"
+            />
             <label htmlFor="forChecked" className="mx-2">
               Show Password
             </label>
@@ -109,10 +132,11 @@ const SignUp = () => {
           value="Register"
           className="block w-full bg-cyan-900 my-3 hover:bg-cyan-950 cursor-pointer p-2 rounded-lg"
         />
-        {
-          errorMessage && 
-          <p className="text-center text-red-400 bg-cyan-950 py-3 text-xl animate-bounce">{errorMessage}</p>
-        }
+        {errorMessage && (
+          <p className="text-center text-red-400 bg-cyan-950 py-3 text-xl animate-bounce">
+            {errorMessage}
+          </p>
+        )}
         {successMessage && (
           <p className="text-center text-green-400 bg-cyan-950 py-3 text-xl animate-bounce">
             {successMessage}
