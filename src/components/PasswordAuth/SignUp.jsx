@@ -21,6 +21,7 @@ const SignUp = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     const confirm_password = e.target.confirm_password.value;
+    const termsAndConditions = e.target.termsAndConditions.checked;
     setSuccessMessage("");
     setErrorMessage("");
     if (password !== confirm_password) {
@@ -31,15 +32,24 @@ const SignUp = () => {
       return;
     }
     if (!regularExpression.test(confirm_password)) {
-      setErrorMessage("Password should be at least 6 charecters long and include at least one uppercase letter,one lowercase letter, one number and one special character!");
+      setErrorMessage(
+        "Password should be at least 6 charecters long and include at least one uppercase letter,one lowercase letter, one number and one special character!"
+      );
+      return;
+    } else if (!termsAndConditions) {
+      setErrorMessage("You Must Accept the Terms and Conditions!");
       return;
     }
-    if(name == ''){
+    if (name == "") {
       setErrorMessage("Name field is required!");
       return;
     }
-    if(email == ''){
+    if (email == "") {
       setErrorMessage("Email field is required!");
+      return;
+    }
+    if (password == "") {
+      setErrorMessage("Password field is required!");
       return;
     }
 
@@ -79,14 +89,16 @@ const SignUp = () => {
           type="text"
           name="name"
           id=""
-          placeholder="Name" required
+          placeholder="Name"
+          required
         />
         <input
           className="block w-full p-2 border rounded my-2"
           type="email"
           name="email"
           id=""
-          placeholder="Email" required
+          placeholder="Email"
+          required
         />
         <input
           className="block w-full p-2 border rounded my-2"
@@ -117,7 +129,11 @@ const SignUp = () => {
           </div>
 
           <div>
-            <input type="checkbox" name="" id="termsAndConditions" />
+            <input
+              type="checkbox"
+              name="termsAndConditions"
+              id="termsAndConditions"
+            />
             <label htmlFor="termsAndConditions">
               {" "}
               I agree to the{" "}
