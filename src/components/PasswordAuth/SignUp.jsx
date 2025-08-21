@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
 
 import { ProfileDataOfUser } from "../../Contexts/ProfileContext";
-import { updateProfile } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
+import auth from "../../Firebase/firebaseinit";
 
 const SignUp = () => {
   const { registeredUser, saveUserProfile } = useContext(ProfileDataOfUser);
@@ -13,6 +18,25 @@ const SignUp = () => {
   const formRef = useRef(null);
   var regularExpression =
     /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+
+  const googleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        saveUserProfile({
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          uid: user.uid,
+        });
+        setSuccessMessage(`Welcome, ${user.displayName}`)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const formSubmit = (e) => {
     e.preventDefault();
@@ -163,7 +187,7 @@ const SignUp = () => {
           <span>or continue with</span>
           <hr className="border-gray-400 w-1/4" />
         </div>
-        <p className="mt-5">
+        <p onClick={googleSignIn} className="mt-5">
           <button className="flex gap-2 items-center justify-center w-full hover:bg-gray-500 border p-1 rounded cursor-pointer my-2">
             {" "}
             <FaGoogle className="text-orange-400" />{" "}
