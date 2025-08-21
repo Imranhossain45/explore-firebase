@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import auth from "../../Firebase/firebaseinit";
+import { ProfileDataOfUser } from "../../Contexts/ProfileContext";
 
 const SignIn = () => {
+  const { saveUserProfile } = useContext(ProfileDataOfUser);
   const [showPass, setShowPass] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const emailRef = useRef(null);
 
   const handleLoginForm = (e) => {
     e.preventDefault();
@@ -18,11 +24,32 @@ const SignIn = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
         const user = result.user;
+        saveUserProfile({
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          uid: user.uid,
+        });
         setSuccessMessage("Login Succesfully!");
       })
       .catch((err) => {
         console.log(err);
         setErrorMessage("Error", err.message);
+      });
+  };
+
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    setSuccessMessage("");
+    setErrorMessage("");
+    const email = emailRef.current.value;
+
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        setSuccessMessage("We have sent a password reset link into your email");
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
       });
   };
   return (
@@ -33,6 +60,7 @@ const SignIn = () => {
       >
         <h2 className="text-center text-3xl underline mb-3">Login</h2>
         <input
+          ref={emailRef}
           className="block w-full p-2 border"
           type="email"
           name="email"
@@ -58,7 +86,10 @@ const SignIn = () => {
               Show Password
             </label>
           </div>
-          <Link className="text-cyan-400 hover:text-cyan-500 hover:underline">
+          <Link
+            onClick={handleResetPassword}
+            className="text-cyan-400 hover:text-cyan-500 hover:underline"
+          >
             Forgot Password?
           </Link>
         </div>
