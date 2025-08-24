@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { ProfileDataOfUser } from "../Contexts/ProfileContext";
 
 const Navbar = () => {
-  const { userProfile } = useContext(ProfileDataOfUser);
+  const { userProfile, logout } = useContext(ProfileDataOfUser);
+  const hanleSignout = () => {
+    logout().then().catch();
+  };
   return (
     <div className="bg-slate-900 py-4">
       <div className="container flex justify-between text-white mx-auto">
@@ -29,14 +32,19 @@ const Navbar = () => {
             </li>
           </ul>
           <div className="flex">
-            { userProfile && 
-              userProfile.name && 
-              <p>{userProfile.name}</p>
-            }
-            { userProfile && 
-              userProfile.photoURL && 
-              <img className="w-8 h-8 rounded-full" src={userProfile.photoURL} alt="" />
-            }
+            {userProfile ? (
+              <div className="flex">
+                <p>{userProfile.name}</p>
+                <button
+                  onClick={hanleSignout}
+                  className="btn bg-cyan-800 p-3 ml-3 cursor-pointer"
+                >
+                  SignOut
+                </button>
+              </div>
+            ) : (
+              <button className="btn bg-cyan-800 p-3 ml-3 cursor-pointer">Login</button>
+            )}
           </div>
         </div>
       </div>

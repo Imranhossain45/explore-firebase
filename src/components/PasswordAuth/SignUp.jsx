@@ -1,10 +1,11 @@
 import React, { useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa";
 
 import { ProfileDataOfUser } from "../../Contexts/ProfileContext";
 import {
   GoogleAuthProvider,
+  sendEmailVerification,
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
@@ -16,6 +17,7 @@ const SignUp = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [showPass, setShowPass] = useState(false);
   const formRef = useRef(null);
+  const navigate = useNavigate();
   var regularExpression =
     /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
@@ -94,7 +96,17 @@ const SignUp = () => {
             console.log(err);
           });
         setSuccessMessage("Registration Success...");
+        sendEmailVerification(user)
+        .then(()=>{
+          setSuccessMessage('Please check your email and verify your account')
+        })
+        .catch(err=>{
+          setErrorMessage('Failed to send verification email. Please try again...');
+        })
         form.reset();
+        setTimeout(()=>{
+          navigate('/login');
+        },3000)
       })
       .catch((err) => {
         setErrorMessage(err.message);

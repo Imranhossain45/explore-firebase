@@ -30,7 +30,11 @@ const SignIn = () => {
           photoURL: user.photoURL,
           uid: user.uid,
         });
-        setSuccessMessage("Login Succesfully!");
+
+        if (!user.emailVerified) {
+          alert("Please verify your email");
+          setSuccessMessage("Login Succesfully!");
+        }
       })
       .catch((err) => {
         console.log(err);
